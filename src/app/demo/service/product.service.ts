@@ -6,7 +6,8 @@ import { Product } from '../api/product';
 export class ProductService {
 
     constructor(private http: HttpClient) { }
-
+    private api= "http://127.0.0.1:3000/productos/"
+    
     getProductsSmall() {
         return this.http.get<any>('assets/demo/data/products-small.json')
             .toPromise()
@@ -15,12 +16,15 @@ export class ProductService {
     }
 
     getProducts() {
-        return this.http.get<any>('assets/demo/data/products.json')
+        return this.http.get<any>(this.api)
             .toPromise()
-            .then(res => res.data as Product[])
+            .then(res => {
+                console.log('Respuesta de la API:', res); // Aquí se imprime la respuesta
+                return res.data as Product[];
+            })
             .then(data => data);
     }
-
+    
     getProductsMixed() {
         return this.http.get<any>('assets/demo/data/products-mixed.json')
             .toPromise()
