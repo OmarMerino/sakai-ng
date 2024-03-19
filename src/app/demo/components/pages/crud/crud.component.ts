@@ -71,6 +71,7 @@ export class CrudComponent implements OnInit {
     }
 
     confirmDeleteSelected() {
+        console.log("borrando +1");
         this.deleteProductsDialog = false;
         this.products = this.products.filter(val => !this.selectedProducts.includes(val));
         this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Products Deleted', life: 3000 });
@@ -78,6 +79,7 @@ export class CrudComponent implements OnInit {
     }
 
     confirmDelete() {
+        console.log("borrando 1");
         this.deleteProductDialog = false;
         this.products = this.products.filter(val => val.id !== this.product.id);
         this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Product Deleted', life: 3000 });
