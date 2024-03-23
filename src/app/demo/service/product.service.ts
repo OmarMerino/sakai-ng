@@ -23,11 +23,13 @@ export class ProductService {
                 console.log('Respuesta de la API:', res); // Aquí se imprime la respuesta
                 return res.data as Product[];
             })
-            .then(data => data);
     }
 
     saveProduct(product: Product): Observable<any> {
       return this.http.post<any>(this.api, product)
+    }
+    deleteProduct(id:number){
+        return this.http.delete<any>(this.api+id)
     }
     
     getProductsMixed() {
