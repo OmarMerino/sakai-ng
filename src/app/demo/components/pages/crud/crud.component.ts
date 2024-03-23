@@ -33,7 +33,9 @@ export class CrudComponent implements OnInit {
     constructor(private productService: ProductService, private messageService: MessageService) { }
 
     ngOnInit() {
-        this.productService.getProducts().then(data => this.products = data);
+        this.productService.getProducts().then(data => {
+            this.products = data
+        });
 
         this.cols = [
             { field: 'product', header: 'Product' },
@@ -97,18 +99,36 @@ export class CrudComponent implements OnInit {
         if (this.product.name?.trim()) {
             if (this.product.id) {
                 // @ts-ignore
+                //hacer servicio para editar
                 this.product.inventoryStatus = this.product.inventoryStatus.value ? this.product.inventoryStatus.value : this.product.inventoryStatus;
                 this.products[this.findIndexById(this.product.id)] = this.product;
                 this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Product Updated', life: 3000 });
             } else {
                 // this.product.id = this.createId();// no es necesario porque es autoincremental..
-                this.product.code = this.createId();
-                this.product.image = 'product-placeholder.svg';
-                // @ts-ignore
-                // this.product.inventoryStatus = this.product.inventoryStatus ? this.product.inventoryStatus.value : 'INSTOCK';
-                this.product.inventoryStatus = this.product.inventoryStatus.value ? this.product.inventoryStatus.value : this.product.inventoryStatus;
-                this.products.push(this.product);
-                this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Product Created', life: 3000 });
+                // this.product.code = this.createId();
+                
+                this.productService.saveProduct(this.product).subscribe(
+                    (response: any) => {
+                        console.log("Producto añadido correctamente:", response.body.Producto);
+                
+                        // Actualizar los datos del producto con la respuesta del servidor
+                        this.product = response.body.Producto;
+                        
+                        // Añadir el producto a la lista de productos
+                        this.products.push(this.product);
+                        
+                        // Mostrar un mensaje de éxito
+                        this.messageService.add({ severity: 'success', summary: 'Éxito', detail: 'Producto creado', life: 3000 });
+                    },
+                    (error: any) => {
+                        console.error('Error al agregar el producto:', error);
+                
+                        // Mostrar un mensaje de error
+                        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Ha ocurrido un error al agregar el producto', life: 3000 });
+                    }
+                );
+                
+
             }
 
             this.products = [...this.products];

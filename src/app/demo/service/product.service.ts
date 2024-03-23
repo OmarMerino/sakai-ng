@@ -1,7 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Product } from '../api/product';
-
+import { map, catchError } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 @Injectable()
 export class ProductService {
 
@@ -23,6 +24,10 @@ export class ProductService {
                 return res.data as Product[];
             })
             .then(data => data);
+    }
+
+    saveProduct(product: Product): Observable<any> {
+      return this.http.post<any>(this.api, product)
     }
     
     getProductsMixed() {
